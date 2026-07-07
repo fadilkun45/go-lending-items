@@ -58,7 +58,7 @@ func (s *LoanServiceImpl) Update(ctx context.Context, loan model.Loan) model.Loa
 			returnedAt = *loan.ReturnedAt
 		}
 		s.LoanItemRepository.ReturnByLoanID(ctx, tx, loan.ID, returnedAt)
-		s.ItemRepository.Update(ctx, tx, model.Item{
+		s.ItemRepository.Create(ctx, tx, model.Item{
 			ID:     existing.ItemID,
 			Status: "AVAILABLE",
 		})
