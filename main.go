@@ -6,45 +6,55 @@
 package main
 
 import (
+	"fmt"
 	_ "loans-item-go/docs"
 
 	"loans-item-go/config"
-	"loans-item-go/controller"
+	"loans-item-go/controller/category"
+	"loans-item-go/controller/item"
+	"loans-item-go/controller/loan"
+	"loans-item-go/controller/user"
 	"loans-item-go/helper"
-	"loans-item-go/repository"
-	"loans-item-go/service"
+	"loans-item-go/repository/category"
+	"loans-item-go/repository/item"
+	"loans-item-go/repository/loan"
+	"loans-item-go/repository/loan_item"
+	"loans-item-go/repository/user"
+	"loans-item-go/service/category"
+	"loans-item-go/service/item"
+	"loans-item-go/service/loan"
+	"loans-item-go/service/user"
 	"net/http"
 
 	httpSwagger "github.com/swaggo/http-swagger"
 )
 
 func main() {
-
 	db := config.OpenConnection()
+	cfg, err := config.LoadConfig()
+	helper.PanicIfError(err)
 
 	// repository
-	userRepo := repository.NewUserRepositoryImpl()
-	categoryRepo := repository.NewCategoryRepositoryImpl()
-	itemRepo := repository.NewItemRepositoryImpl()
-	loanRepo := repository.NewLoanRepositoryImpl()
-	loanItemRepo := repository.NewLoanItemRepositoryImpl()
+	userRepo := userrepo.NewRepositoryImpl()
+	categoryRepo := categoryrepo.NewRepositoryImpl()
+	itemRepo := itemrepo.NewRepositoryImpl()
+	loanRepo := loanrepo.NewRepositoryImpl()
+	loanItemRepo := loanitemrepo.NewRepositoryImpl()
 
 	// service
-	userSvc := service.NewUserServiceImpl(userRepo, db)
-	categorySvc := service.NewCategoryServiceImpl(categoryRepo, db)
-	itemSvc := service.NewItemServiceImpl(itemRepo, db)
-	loanSvc := service.NewLoanServiceImpl(loanRepo, itemRepo, loanItemRepo, db)
+	userSvc := usersvc.NewServiceImpl(userRepo, db)
+	categorySvc := categorysvc.NewServiceImpl(categoryRepo, db)
+	itemSvc := itemsvc.NewServiceImpl(itemRepo, db)
+	loanSvc := loansvc.NewServiceImpl(loanRepo, itemRepo, loanItemRepo, db)
 
 	// controller
-	userCtrl := controller.NewUserController(userSvc)
-	categoryCtrl := controller.NewCategoryController(categorySvc)
-	itemCtrl := controller.NewItemController(itemSvc)
-	loanCtrl := controller.NewLoanController(loanSvc)
+	userCtrl := userctrl.NewController(userSvc)
+	categoryCtrl := categoryctrl.NewController(categorySvc)
+	itemCtrl := itemctrl.NewController(itemSvc)
+	loanCtrl := loanctrl.NewController(loanSvc)
 
 	// router
 	mux := http.NewServeMux()
-
-	// swagger
 	mux.HandleFunc("GET /swagger/", httpSwagger.WrapHandler)
 
 	// user routes
@@ -65,6 +75,7 @@ func main() {
 	// item routes
 	mux.HandleFunc("POST /api/items", itemCtrl.Create)
 	mux.HandleFunc("GET /api/items", itemCtrl.FindAll)
+	mux.HandleFunc("GET /api/items/owner/{ownerId}", itemCtrl.FindByOwner)
 	mux.HandleFunc("GET /api/items/{id}", itemCtrl.FindById)
 	mux.HandleFunc("PUT /api/items/{id}", itemCtrl.Update)
 	mux.HandleFunc("DELETE /api/items/{id}", itemCtrl.Delete)
@@ -78,10 +89,11 @@ func main() {
 	mux.HandleFunc("DELETE /api/loans/{id}", loanCtrl.Delete)
 
 	server := &http.Server{
-		Addr:    "localhost:8000",
+		Addr:    "localhost:" + cfg.APP_PORT,
 		Handler: mux,
 	}
 
-	err := server.ListenAndServe()
+	fmt.Println("Server started on port", cfg.APP_PORT)
+	err = server.ListenAndServe()
 	helper.PanicIfError(err)
 }

@@ -12,6 +12,7 @@ type Loan struct {
 	ReturnedAt *time.Time `json:"returned_at" gorm:"column:returned_at"`
 	CreatedAt  time.Time  `json:"created_at" gorm:"column:created_at;autoCreateTime"`
 	UpdatedAt  time.Time  `json:"updated_at" gorm:"column:updated_at;autoUpdateTime"`
+	Status     string     `json:"status" gorm:"-"`
 }
 
 func (l *Loan) TableName() string {
