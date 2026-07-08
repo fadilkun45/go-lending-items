@@ -38,6 +38,7 @@ type UpdateItemRequest struct {
 // @Param body body CreateItemRequest true "Item data"
 // @Success 201 {object} model.Item
 // @Failure 400 {object} helper.WebResponse
+// @Security BearerAuth
 // @Router /api/items [post]
 func (h *ControllerImpl) Create(w http.ResponseWriter, r *http.Request) {
 	defer helper.RecoverError(w)
@@ -72,6 +73,7 @@ func (h *ControllerImpl) Create(w http.ResponseWriter, r *http.Request) {
 // @Param id path int true "Item ID"
 // @Success 200 {object} model.Item
 // @Failure 404 {object} helper.WebResponse
+// @Security BearerAuth
 // @Router /api/items/{id} [get]
 func (h *ControllerImpl) FindById(w http.ResponseWriter, r *http.Request) {
 	defer helper.RecoverError(w)
@@ -90,6 +92,7 @@ func (h *ControllerImpl) FindById(w http.ResponseWriter, r *http.Request) {
 // @Param page query int false "Page number" default(1)
 // @Param page_size query int false "Page size" default(10)
 // @Success 200 {object} helper.PaginatedWebResponse
+// @Security BearerAuth
 // @Router /api/items [get]
 func (h *ControllerImpl) FindAll(w http.ResponseWriter, r *http.Request) {
 	defer helper.RecoverError(w)
@@ -113,6 +116,7 @@ func (h *ControllerImpl) FindAll(w http.ResponseWriter, r *http.Request) {
 // @Param page query int false "Page number" default(1)
 // @Param page_size query int false "Page size" default(10)
 // @Success 200 {object} helper.PaginatedWebResponse
+// @Security BearerAuth
 // @Router /api/items/owner/{ownerId} [get]
 func (h *ControllerImpl) FindByOwner(w http.ResponseWriter, r *http.Request) {
 	defer helper.RecoverError(w)
@@ -142,6 +146,7 @@ func (h *ControllerImpl) FindByOwner(w http.ResponseWriter, r *http.Request) {
 // @Param body body UpdateItemRequest true "Update data"
 // @Success 200 {object} model.Item
 // @Failure 400 {object} helper.WebResponse
+// @Security BearerAuth
 // @Router /api/items/{id} [put]
 func (h *ControllerImpl) Update(w http.ResponseWriter, r *http.Request) {
 	defer helper.RecoverError(w)
@@ -170,6 +175,7 @@ func (h *ControllerImpl) Update(w http.ResponseWriter, r *http.Request) {
 // @Param id path int true "Item ID"
 // @Success 200 {object} helper.WebResponse
 // @Failure 404 {object} helper.WebResponse
+// @Security BearerAuth
 // @Router /api/items/{id} [delete]
 func (h *ControllerImpl) Delete(w http.ResponseWriter, r *http.Request) {
 	defer helper.RecoverError(w)

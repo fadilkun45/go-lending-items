@@ -27,6 +27,11 @@ type LoginRequest struct {
 	Password string `json:"password" validate:"required"`
 }
 
+type LoginResponse struct {
+	User  model.User `json:"user"`
+	Token string     `json:"token"`
+}
+
 type UpdateUserRequest struct {
 	Name  string `json:"name" validate:"required"`
 	Email string `json:"email" validate:"required,email"`
@@ -61,7 +66,7 @@ func (h *ControllerImpl) Register(w http.ResponseWriter, r *http.Request) {
 // @Accept json
 // @Produce json
 // @Param body body LoginRequest true "Login data"
-// @Success 200 {object} model.User
+// @Success 200 {object} LoginResponse
 // @Failure 400 {object} helper.WebResponse
 // @Router /api/users/login [post]
 func (h *ControllerImpl) Login(w http.ResponseWriter, r *http.Request) {
@@ -76,8 +81,8 @@ func (h *ControllerImpl) Login(w http.ResponseWriter, r *http.Request) {
 		helper.WriteError(w, http.StatusBadRequest, errs[0])
 		return
 	}
-	user := h.UserService.Login(r.Context(), req.Email, req.Password)
-	helper.WriteResponse(w, http.StatusOK, user)
+	user, token := h.UserService.Login(r.Context(), req.Email, req.Password)
+	helper.WriteResponse(w, http.StatusOK, LoginResponse{User: user, Token: token})
 }
 
 // @Summary Get user by ID
@@ -86,6 +91,7 @@ func (h *ControllerImpl) Login(w http.ResponseWriter, r *http.Request) {
 // @Param id path int true "User ID"
 // @Success 200 {object} model.User
 // @Failure 404 {object} helper.WebResponse
+// @Security BearerAuth
 // @Router /api/users/{id} [get]
 func (h *ControllerImpl) FindById(w http.ResponseWriter, r *http.Request) {
 	defer helper.RecoverError(w)
@@ -104,6 +110,7 @@ func (h *ControllerImpl) FindById(w http.ResponseWriter, r *http.Request) {
 // @Param page query int false "Page number" default(1)
 // @Param page_size query int false "Page size" default(10)
 // @Success 200 {object} helper.PaginatedWebResponse
+// @Security BearerAuth
 // @Router /api/users [get]
 func (h *ControllerImpl) FindAll(w http.ResponseWriter, r *http.Request) {
 	defer helper.RecoverError(w)
@@ -128,6 +135,7 @@ func (h *ControllerImpl) FindAll(w http.ResponseWriter, r *http.Request) {
 // @Param body body UpdateUserRequest true "Update data"
 // @Success 200 {object} model.User
 // @Failure 400 {object} helper.WebResponse
+// @Security BearerAuth
 // @Router /api/users/{id} [put]
 func (h *ControllerImpl) Update(w http.ResponseWriter, r *http.Request) {
 	defer helper.RecoverError(w)
@@ -156,6 +164,7 @@ func (h *ControllerImpl) Update(w http.ResponseWriter, r *http.Request) {
 // @Param id path int true "User ID"
 // @Success 200 {object} helper.WebResponse
 // @Failure 404 {object} helper.WebResponse
+// @Security BearerAuth
 // @Router /api/users/{id} [delete]
 func (h *ControllerImpl) Delete(w http.ResponseWriter, r *http.Request) {
 	defer helper.RecoverError(w)

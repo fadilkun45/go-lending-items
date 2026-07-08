@@ -1,6 +1,6 @@
 basePath: /
 definitions:
-  controller.CreateCategoryRequest:
+  categoryctrl.CreateCategoryRequest:
     properties:
       name:
         type: string
@@ -10,92 +10,11 @@ definitions:
     - name
     - owner_id
     type: object
-  controller.CreateItemRequest:
-    properties:
-      category_id:
-        type: integer
-      condition:
-        type: string
-      name:
-        type: string
-      owner_id:
-        type: integer
-      serial_no:
-        type: string
-      status:
-        type: string
-    required:
-    - category_id
-    - name
-    - owner_id
-    type: object
-  controller.CreateLoanRequest:
-    properties:
-      borrower_id:
-        type: integer
-      item_id:
-        type: integer
-    required:
-    - borrower_id
-    - item_id
-    type: object
-  controller.LoginRequest:
-    properties:
-      email:
-        type: string
-      password:
-        type: string
-    required:
-    - email
-    - password
-    type: object
-  controller.RegisterRequest:
-    properties:
-      email:
-        type: string
-      name:
-        type: string
-      password:
-        minLength: 6
-        type: string
-    required:
-    - email
-    - name
-    - password
-    type: object
-  controller.UpdateCategoryRequest:
+  categoryctrl.UpdateCategoryRequest:
     properties:
       name:
         type: string
     required:
-    - name
-    type: object
-  controller.UpdateItemRequest:
-    properties:
-      condition:
-        type: string
-      name:
-        type: string
-      status:
-        type: string
-    required:
-    - condition
-    - name
-    - status
-    type: object
-  controller.UpdateLoanRequest:
-    properties:
-      returned_at:
-        type: string
-    type: object
-  controller.UpdateUserRequest:
-    properties:
-      email:
-        type: string
-      name:
-        type: string
-    required:
-    - email
     - name
     type: object
   helper.PaginatedWebResponse:
@@ -120,6 +39,84 @@ definitions:
       message:
         type: string
       status:
+        type: string
+    type: object
+  itemctrl.CreateItemRequest:
+    properties:
+      category_id:
+        type: integer
+      condition:
+        type: string
+      name:
+        type: string
+      owner_id:
+        type: integer
+      serial_no:
+        type: string
+      status:
+        type: string
+    required:
+    - category_id
+    - name
+    - owner_id
+    type: object
+  itemctrl.UpdateItemRequest:
+    properties:
+      condition:
+        type: string
+      name:
+        type: string
+      status:
+        type: string
+    required:
+    - condition
+    - name
+    - status
+    type: object
+  loanctrl.CreateLoanRequest:
+    properties:
+      borrower_id:
+        type: integer
+      item_id:
+        type: integer
+    required:
+    - borrower_id
+    - item_id
+    type: object
+  loanctrl.ItemSummaryResponse:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+    type: object
+  loanctrl.LoanResponse:
+    properties:
+      borrowed_at:
+        type: string
+      borrower:
+        $ref: '#/definitions/loanctrl.UserSummaryResponse'
+      id:
+        type: integer
+      item:
+        $ref: '#/definitions/loanctrl.ItemSummaryResponse'
+      returned_at:
+        type: string
+      status:
+        type: string
+    type: object
+  loanctrl.UpdateLoanRequest:
+    properties:
+      returned_at:
+        type: string
+    type: object
+  loanctrl.UserSummaryResponse:
+    properties:
+      email:
+        type: string
+      id:
+        type: integer
+      name:
         type: string
     type: object
   model.Category:
@@ -162,27 +159,6 @@ definitions:
       updated_at:
         type: string
     type: object
-  model.Loan:
-    properties:
-      borrowed_at:
-        type: string
-      borrower:
-        $ref: '#/definitions/model.User'
-      borrower_id:
-        type: integer
-      created_at:
-        type: string
-      id:
-        type: integer
-      item:
-        $ref: '#/definitions/model.Item'
-      item_id:
-        type: integer
-      returned_at:
-        type: string
-      updated_at:
-        type: string
-    type: object
   model.User:
     properties:
       created_at:
@@ -195,6 +171,47 @@ definitions:
         type: string
       updated_at:
         type: string
+    type: object
+  userctrl.LoginRequest:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  userctrl.LoginResponse:
+    properties:
+      token:
+        type: string
+      user:
+        $ref: '#/definitions/model.User'
+    type: object
+  userctrl.RegisterRequest:
+    properties:
+      email:
+        type: string
+      name:
+        type: string
+      password:
+        minLength: 6
+        type: string
+    required:
+    - email
+    - name
+    - password
+    type: object
+  userctrl.UpdateUserRequest:
+    properties:
+      email:
+        type: string
+      name:
+        type: string
+    required:
+    - email
+    - name
     type: object
 host: localhost:8000
 info:
@@ -223,6 +240,8 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/helper.PaginatedWebResponse'
+      security:
+      - BearerAuth: []
       summary: Get all categories
       tags:
       - categories
@@ -235,7 +254,7 @@ paths:
         name: body
         required: true
         schema:
-          $ref: '#/definitions/controller.CreateCategoryRequest'
+          $ref: '#/definitions/categoryctrl.CreateCategoryRequest'
       produces:
       - application/json
       responses:
@@ -247,6 +266,8 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/helper.WebResponse'
+      security:
+      - BearerAuth: []
       summary: Create category
       tags:
       - categories
@@ -269,6 +290,8 @@ paths:
           description: Not Found
           schema:
             $ref: '#/definitions/helper.WebResponse'
+      security:
+      - BearerAuth: []
       summary: Delete category
       tags:
       - categories
@@ -290,6 +313,8 @@ paths:
           description: Not Found
           schema:
             $ref: '#/definitions/helper.WebResponse'
+      security:
+      - BearerAuth: []
       summary: Get category by ID
       tags:
       - categories
@@ -307,7 +332,7 @@ paths:
         name: body
         required: true
         schema:
-          $ref: '#/definitions/controller.UpdateCategoryRequest'
+          $ref: '#/definitions/categoryctrl.UpdateCategoryRequest'
       produces:
       - application/json
       responses:
@@ -319,6 +344,8 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/helper.WebResponse'
+      security:
+      - BearerAuth: []
       summary: Update category
       tags:
       - categories
@@ -342,6 +369,8 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/helper.PaginatedWebResponse'
+      security:
+      - BearerAuth: []
       summary: Get all items
       tags:
       - items
@@ -354,7 +383,7 @@ paths:
         name: body
         required: true
         schema:
-          $ref: '#/definitions/controller.CreateItemRequest'
+          $ref: '#/definitions/itemctrl.CreateItemRequest'
       produces:
       - application/json
       responses:
@@ -366,6 +395,8 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/helper.WebResponse'
+      security:
+      - BearerAuth: []
       summary: Create item
       tags:
       - items
@@ -388,6 +419,8 @@ paths:
           description: Not Found
           schema:
             $ref: '#/definitions/helper.WebResponse'
+      security:
+      - BearerAuth: []
       summary: Delete item
       tags:
       - items
@@ -409,6 +442,8 @@ paths:
           description: Not Found
           schema:
             $ref: '#/definitions/helper.WebResponse'
+      security:
+      - BearerAuth: []
       summary: Get item by ID
       tags:
       - items
@@ -426,7 +461,7 @@ paths:
         name: body
         required: true
         schema:
-          $ref: '#/definitions/controller.UpdateItemRequest'
+          $ref: '#/definitions/itemctrl.UpdateItemRequest'
       produces:
       - application/json
       responses:
@@ -438,7 +473,39 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/helper.WebResponse'
+      security:
+      - BearerAuth: []
       summary: Update item
+      tags:
+      - items
+  /api/items/owner/{ownerId}:
+    get:
+      parameters:
+      - description: Owner ID
+        in: path
+        name: ownerId
+        required: true
+        type: integer
+      - default: 1
+        description: Page number
+        in: query
+        name: page
+        type: integer
+      - default: 10
+        description: Page size
+        in: query
+        name: page_size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/helper.PaginatedWebResponse'
+      security:
+      - BearerAuth: []
+      summary: Get items by owner
       tags:
       - items
   /api/loans:
@@ -461,6 +528,8 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/helper.PaginatedWebResponse'
+      security:
+      - BearerAuth: []
       summary: Get all loans
       tags:
       - loans
@@ -473,7 +542,7 @@ paths:
         name: body
         required: true
         schema:
-          $ref: '#/definitions/controller.CreateLoanRequest'
+          $ref: '#/definitions/loanctrl.CreateLoanRequest'
       produces:
       - application/json
       responses:
@@ -485,6 +554,8 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/helper.WebResponse'
+      security:
+      - BearerAuth: []
       summary: Create loan (borrow item)
       tags:
       - loans
@@ -507,6 +578,8 @@ paths:
           description: Not Found
           schema:
             $ref: '#/definitions/helper.WebResponse'
+      security:
+      - BearerAuth: []
       summary: Delete loan
       tags:
       - loans
@@ -523,11 +596,13 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/model.Loan'
+            $ref: '#/definitions/loanctrl.LoanResponse'
         "404":
           description: Not Found
           schema:
             $ref: '#/definitions/helper.WebResponse'
+      security:
+      - BearerAuth: []
       summary: Get loan by ID
       tags:
       - loans
@@ -544,7 +619,7 @@ paths:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/controller.UpdateLoanRequest'
+          $ref: '#/definitions/loanctrl.UpdateLoanRequest'
       produces:
       - application/json
       responses:
@@ -556,7 +631,9 @@ paths:
           description: Not Found
           schema:
             $ref: '#/definitions/helper.WebResponse'
-      summary: Return loan (update returned_at)
+      security:
+      - BearerAuth: []
+      summary: Return loan
       tags:
       - loans
   /api/loans/borrower/{borrower_id}:
@@ -584,6 +661,8 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/helper.PaginatedWebResponse'
+      security:
+      - BearerAuth: []
       summary: Get loans by borrower ID
       tags:
       - loans
@@ -607,6 +686,8 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/helper.PaginatedWebResponse'
+      security:
+      - BearerAuth: []
       summary: Get all users
       tags:
       - users
@@ -629,6 +710,8 @@ paths:
           description: Not Found
           schema:
             $ref: '#/definitions/helper.WebResponse'
+      security:
+      - BearerAuth: []
       summary: Delete user
       tags:
       - users
@@ -650,6 +733,8 @@ paths:
           description: Not Found
           schema:
             $ref: '#/definitions/helper.WebResponse'
+      security:
+      - BearerAuth: []
       summary: Get user by ID
       tags:
       - users
@@ -667,7 +752,7 @@ paths:
         name: body
         required: true
         schema:
-          $ref: '#/definitions/controller.UpdateUserRequest'
+          $ref: '#/definitions/userctrl.UpdateUserRequest'
       produces:
       - application/json
       responses:
@@ -679,6 +764,8 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/helper.WebResponse'
+      security:
+      - BearerAuth: []
       summary: Update user
       tags:
       - users
@@ -692,14 +779,14 @@ paths:
         name: body
         required: true
         schema:
-          $ref: '#/definitions/controller.LoginRequest'
+          $ref: '#/definitions/userctrl.LoginRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/model.User'
+            $ref: '#/definitions/userctrl.LoginResponse'
         "400":
           description: Bad Request
           schema:
@@ -717,7 +804,7 @@ paths:
         name: body
         required: true
         schema:
-          $ref: '#/definitions/controller.RegisterRequest'
+          $ref: '#/definitions/userctrl.RegisterRequest'
       produces:
       - application/json
       responses:
@@ -732,4 +819,10 @@ paths:
       summary: Register user
       tags:
       - users
+securityDefinitions:
+  BearerAuth:
+    description: Type "Bearer" followed by a space and the JWT token.
+    in: header
+    name: Authorization
+    type: apiKey
 swagger: "2.0"

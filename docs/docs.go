@@ -17,6 +17,11 @@ const docTemplate = `{
     "paths": {
         "/api/categories": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "produces": [
                     "application/json"
                 ],
@@ -50,6 +55,11 @@ const docTemplate = `{
                 }
             },
             "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "consumes": [
                     "application/json"
                 ],
@@ -67,7 +77,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/controller.CreateCategoryRequest"
+                            "$ref": "#/definitions/categoryctrl.CreateCategoryRequest"
                         }
                     }
                 ],
@@ -89,6 +99,11 @@ const docTemplate = `{
         },
         "/api/categories/{id}": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "produces": [
                     "application/json"
                 ],
@@ -121,6 +136,11 @@ const docTemplate = `{
                 }
             },
             "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "consumes": [
                     "application/json"
                 ],
@@ -145,7 +165,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/controller.UpdateCategoryRequest"
+                            "$ref": "#/definitions/categoryctrl.UpdateCategoryRequest"
                         }
                     }
                 ],
@@ -165,6 +185,11 @@ const docTemplate = `{
                 }
             },
             "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "produces": [
                     "application/json"
                 ],
@@ -199,6 +224,11 @@ const docTemplate = `{
         },
         "/api/items": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "produces": [
                     "application/json"
                 ],
@@ -232,6 +262,11 @@ const docTemplate = `{
                 }
             },
             "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "consumes": [
                     "application/json"
                 ],
@@ -249,7 +284,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/controller.CreateItemRequest"
+                            "$ref": "#/definitions/itemctrl.CreateItemRequest"
                         }
                     }
                 ],
@@ -269,8 +304,60 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/items/owner/{ownerId}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "items"
+                ],
+                "summary": "Get items by owner",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Owner ID",
+                        "name": "ownerId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "default": 1,
+                        "description": "Page number",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 10,
+                        "description": "Page size",
+                        "name": "page_size",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/helper.PaginatedWebResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/api/items/{id}": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "produces": [
                     "application/json"
                 ],
@@ -303,6 +390,11 @@ const docTemplate = `{
                 }
             },
             "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "consumes": [
                     "application/json"
                 ],
@@ -327,7 +419,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/controller.UpdateItemRequest"
+                            "$ref": "#/definitions/itemctrl.UpdateItemRequest"
                         }
                     }
                 ],
@@ -347,6 +439,11 @@ const docTemplate = `{
                 }
             },
             "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "produces": [
                     "application/json"
                 ],
@@ -381,6 +478,11 @@ const docTemplate = `{
         },
         "/api/loans": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "produces": [
                     "application/json"
                 ],
@@ -414,6 +516,11 @@ const docTemplate = `{
                 }
             },
             "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "consumes": [
                     "application/json"
                 ],
@@ -431,7 +538,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/controller.CreateLoanRequest"
+                            "$ref": "#/definitions/loanctrl.CreateLoanRequest"
                         }
                     }
                 ],
@@ -453,6 +560,11 @@ const docTemplate = `{
         },
         "/api/loans/borrower/{borrower_id}": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "produces": [
                     "application/json"
                 ],
@@ -495,6 +607,11 @@ const docTemplate = `{
         },
         "/api/loans/{id}": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "produces": [
                     "application/json"
                 ],
@@ -515,7 +632,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/model.Loan"
+                            "$ref": "#/definitions/loanctrl.LoanResponse"
                         }
                     },
                     "404": {
@@ -527,6 +644,11 @@ const docTemplate = `{
                 }
             },
             "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "consumes": [
                     "application/json"
                 ],
@@ -536,7 +658,7 @@ const docTemplate = `{
                 "tags": [
                     "loans"
                 ],
-                "summary": "Return loan (update returned_at)",
+                "summary": "Return loan",
                 "parameters": [
                     {
                         "type": "integer",
@@ -550,7 +672,7 @@ const docTemplate = `{
                         "name": "body",
                         "in": "body",
                         "schema": {
-                            "$ref": "#/definitions/controller.UpdateLoanRequest"
+                            "$ref": "#/definitions/loanctrl.UpdateLoanRequest"
                         }
                     }
                 ],
@@ -570,6 +692,11 @@ const docTemplate = `{
                 }
             },
             "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "produces": [
                     "application/json"
                 ],
@@ -604,6 +731,11 @@ const docTemplate = `{
         },
         "/api/users": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "produces": [
                     "application/json"
                 ],
@@ -656,7 +788,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/controller.LoginRequest"
+                            "$ref": "#/definitions/userctrl.LoginRequest"
                         }
                     }
                 ],
@@ -664,7 +796,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/model.User"
+                            "$ref": "#/definitions/userctrl.LoginResponse"
                         }
                     },
                     "400": {
@@ -695,7 +827,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/controller.RegisterRequest"
+                            "$ref": "#/definitions/userctrl.RegisterRequest"
                         }
                     }
                 ],
@@ -717,6 +849,11 @@ const docTemplate = `{
         },
         "/api/users/{id}": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "produces": [
                     "application/json"
                 ],
@@ -749,6 +886,11 @@ const docTemplate = `{
                 }
             },
             "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "consumes": [
                     "application/json"
                 ],
@@ -773,7 +915,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/controller.UpdateUserRequest"
+                            "$ref": "#/definitions/userctrl.UpdateUserRequest"
                         }
                     }
                 ],
@@ -793,6 +935,11 @@ const docTemplate = `{
                 }
             },
             "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "produces": [
                     "application/json"
                 ],
@@ -827,7 +974,7 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "controller.CreateCategoryRequest": {
+        "categoryctrl.CreateCategoryRequest": {
             "type": "object",
             "required": [
                 "name",
@@ -842,132 +989,12 @@ const docTemplate = `{
                 }
             }
         },
-        "controller.CreateItemRequest": {
-            "type": "object",
-            "required": [
-                "category_id",
-                "name",
-                "owner_id"
-            ],
-            "properties": {
-                "category_id": {
-                    "type": "integer"
-                },
-                "condition": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "owner_id": {
-                    "type": "integer"
-                },
-                "serial_no": {
-                    "type": "string"
-                },
-                "status": {
-                    "type": "string"
-                }
-            }
-        },
-        "controller.CreateLoanRequest": {
-            "type": "object",
-            "required": [
-                "borrower_id",
-                "item_id"
-            ],
-            "properties": {
-                "borrower_id": {
-                    "type": "integer"
-                },
-                "item_id": {
-                    "type": "integer"
-                }
-            }
-        },
-        "controller.LoginRequest": {
-            "type": "object",
-            "required": [
-                "email",
-                "password"
-            ],
-            "properties": {
-                "email": {
-                    "type": "string"
-                },
-                "password": {
-                    "type": "string"
-                }
-            }
-        },
-        "controller.RegisterRequest": {
-            "type": "object",
-            "required": [
-                "email",
-                "name",
-                "password"
-            ],
-            "properties": {
-                "email": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "password": {
-                    "type": "string",
-                    "minLength": 6
-                }
-            }
-        },
-        "controller.UpdateCategoryRequest": {
+        "categoryctrl.UpdateCategoryRequest": {
             "type": "object",
             "required": [
                 "name"
             ],
             "properties": {
-                "name": {
-                    "type": "string"
-                }
-            }
-        },
-        "controller.UpdateItemRequest": {
-            "type": "object",
-            "required": [
-                "condition",
-                "name",
-                "status"
-            ],
-            "properties": {
-                "condition": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "status": {
-                    "type": "string"
-                }
-            }
-        },
-        "controller.UpdateLoanRequest": {
-            "type": "object",
-            "properties": {
-                "returned_at": {
-                    "type": "string"
-                }
-            }
-        },
-        "controller.UpdateUserRequest": {
-            "type": "object",
-            "required": [
-                "email",
-                "name"
-            ],
-            "properties": {
-                "email": {
-                    "type": "string"
-                },
                 "name": {
                     "type": "string"
                 }
@@ -1005,6 +1032,124 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "status": {
+                    "type": "string"
+                }
+            }
+        },
+        "itemctrl.CreateItemRequest": {
+            "type": "object",
+            "required": [
+                "category_id",
+                "name",
+                "owner_id"
+            ],
+            "properties": {
+                "category_id": {
+                    "type": "integer"
+                },
+                "condition": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "owner_id": {
+                    "type": "integer"
+                },
+                "serial_no": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                }
+            }
+        },
+        "itemctrl.UpdateItemRequest": {
+            "type": "object",
+            "required": [
+                "condition",
+                "name",
+                "status"
+            ],
+            "properties": {
+                "condition": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                }
+            }
+        },
+        "loanctrl.CreateLoanRequest": {
+            "type": "object",
+            "required": [
+                "borrower_id",
+                "item_id"
+            ],
+            "properties": {
+                "borrower_id": {
+                    "type": "integer"
+                },
+                "item_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "loanctrl.ItemSummaryResponse": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "loanctrl.LoanResponse": {
+            "type": "object",
+            "properties": {
+                "borrowed_at": {
+                    "type": "string"
+                },
+                "borrower": {
+                    "$ref": "#/definitions/loanctrl.UserSummaryResponse"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "item": {
+                    "$ref": "#/definitions/loanctrl.ItemSummaryResponse"
+                },
+                "returned_at": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                }
+            }
+        },
+        "loanctrl.UpdateLoanRequest": {
+            "type": "object",
+            "properties": {
+                "returned_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "loanctrl.UserSummaryResponse": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
                     "type": "string"
                 }
             }
@@ -1070,38 +1215,6 @@ const docTemplate = `{
                 }
             }
         },
-        "model.Loan": {
-            "type": "object",
-            "properties": {
-                "borrowed_at": {
-                    "type": "string"
-                },
-                "borrower": {
-                    "$ref": "#/definitions/model.User"
-                },
-                "borrower_id": {
-                    "type": "integer"
-                },
-                "created_at": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "item": {
-                    "$ref": "#/definitions/model.Item"
-                },
-                "item_id": {
-                    "type": "integer"
-                },
-                "returned_at": {
-                    "type": "string"
-                },
-                "updated_at": {
-                    "type": "string"
-                }
-            }
-        },
         "model.User": {
             "type": "object",
             "properties": {
@@ -1121,6 +1234,75 @@ const docTemplate = `{
                     "type": "string"
                 }
             }
+        },
+        "userctrl.LoginRequest": {
+            "type": "object",
+            "required": [
+                "email",
+                "password"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                }
+            }
+        },
+        "userctrl.LoginResponse": {
+            "type": "object",
+            "properties": {
+                "token": {
+                    "type": "string"
+                },
+                "user": {
+                    "$ref": "#/definitions/model.User"
+                }
+            }
+        },
+        "userctrl.RegisterRequest": {
+            "type": "object",
+            "required": [
+                "email",
+                "name",
+                "password"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string",
+                    "minLength": 6
+                }
+            }
+        },
+        "userctrl.UpdateUserRequest": {
+            "type": "object",
+            "required": [
+                "email",
+                "name"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        }
+    },
+    "securityDefinitions": {
+        "BearerAuth": {
+            "description": "Type \"Bearer\" followed by a space and the JWT token.",
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
         }
     }
 }`

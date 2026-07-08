@@ -32,6 +32,7 @@ type UpdateCategoryRequest struct {
 // @Param body body CreateCategoryRequest true "Category data"
 // @Success 201 {object} model.Category
 // @Failure 400 {object} helper.WebResponse
+// @Security BearerAuth
 // @Router /api/categories [post]
 func (h *ControllerImpl) Create(w http.ResponseWriter, r *http.Request) {
 	defer helper.RecoverError(w)
@@ -55,6 +56,7 @@ func (h *ControllerImpl) Create(w http.ResponseWriter, r *http.Request) {
 // @Param id path int true "Category ID"
 // @Success 200 {object} model.Category
 // @Failure 404 {object} helper.WebResponse
+// @Security BearerAuth
 // @Router /api/categories/{id} [get]
 func (h *ControllerImpl) FindById(w http.ResponseWriter, r *http.Request) {
 	defer helper.RecoverError(w)
@@ -73,6 +75,7 @@ func (h *ControllerImpl) FindById(w http.ResponseWriter, r *http.Request) {
 // @Param page query int false "Page number" default(1)
 // @Param page_size query int false "Page size" default(10)
 // @Success 200 {object} helper.PaginatedWebResponse
+// @Security BearerAuth
 // @Router /api/categories [get]
 func (h *ControllerImpl) FindAll(w http.ResponseWriter, r *http.Request) {
 	defer helper.RecoverError(w)
@@ -97,6 +100,7 @@ func (h *ControllerImpl) FindAll(w http.ResponseWriter, r *http.Request) {
 // @Param body body UpdateCategoryRequest true "Update data"
 // @Success 200 {object} model.Category
 // @Failure 400 {object} helper.WebResponse
+// @Security BearerAuth
 // @Router /api/categories/{id} [put]
 func (h *ControllerImpl) Update(w http.ResponseWriter, r *http.Request) {
 	defer helper.RecoverError(w)
@@ -125,6 +129,7 @@ func (h *ControllerImpl) Update(w http.ResponseWriter, r *http.Request) {
 // @Param id path int true "Category ID"
 // @Success 200 {object} helper.WebResponse
 // @Failure 404 {object} helper.WebResponse
+// @Security BearerAuth
 // @Router /api/categories/{id} [delete]
 func (h *ControllerImpl) Delete(w http.ResponseWriter, r *http.Request) {
 	defer helper.RecoverError(w)

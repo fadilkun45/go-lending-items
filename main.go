@@ -3,6 +3,10 @@
 // @description REST API untuk sistem peminjaman barang P2P
 // @host localhost:8000
 // @BasePath /
+// @securityDefinitions.apikey BearerAuth
+// @in header
+// @name Authorization
+// @description Type "Bearer" followed by a space and the JWT token.
 package main
 
 import (
@@ -15,6 +19,7 @@ import (
 	"loans-item-go/controller/loan"
 	"loans-item-go/controller/user"
 	"loans-item-go/helper"
+	"loans-item-go/middleware"
 	"loans-item-go/repository/category"
 	"loans-item-go/repository/item"
 	"loans-item-go/repository/loan"
@@ -42,7 +47,7 @@ func main() {
 	loanItemRepo := loanitemrepo.NewRepositoryImpl()
 
 	// service
-	userSvc := usersvc.NewServiceImpl(userRepo, db)
+	userSvc := usersvc.NewServiceImpl(userRepo, db, cfg.JWT_SECRET)
 	categorySvc := categorysvc.NewServiceImpl(categoryRepo, db)
 	itemSvc := itemsvc.NewServiceImpl(itemRepo, db)
 	loanSvc := loansvc.NewServiceImpl(loanRepo, itemRepo, loanItemRepo, db)
@@ -88,9 +93,11 @@ func main() {
 	mux.HandleFunc("PUT /api/loans/{id}", loanCtrl.Update)
 	mux.HandleFunc("DELETE /api/loans/{id}", loanCtrl.Delete)
 
+	handler := middleware.CORS(middleware.Auth(cfg.JWT_SECRET)(mux))
+
 	server := &http.Server{
 		Addr:    "localhost:" + cfg.APP_PORT,
-		Handler: mux,
+		Handler: handler,
 	}
 
 	fmt.Println("Server started on port", cfg.APP_PORT)

@@ -3,6 +3,7 @@ package usersvc
 import (
 	"context"
 	"errors"
+	"loans-item-go/helper"
 	"loans-item-go/model"
 	"loans-item-go/repository/user"
 
@@ -13,12 +14,14 @@ import (
 type ServiceImpl struct {
 	UserRepository userrepo.Repository
 	DB             *gorm.DB
+	JWTSecret      string
 }
 
-func NewServiceImpl(userRepository userrepo.Repository, db *gorm.DB) Service {
+func NewServiceImpl(userRepository userrepo.Repository, db *gorm.DB, jwtSecret string) Service {
 	return &ServiceImpl{
 		UserRepository: userRepository,
 		DB:             db,
+		JWTSecret:      jwtSecret,
 	}
 }
 
@@ -31,7 +34,7 @@ func (s *ServiceImpl) Register(ctx context.Context, user model.User) model.User 
 	return s.UserRepository.CreateUser(ctx, s.DB, user)
 }
 
-func (s *ServiceImpl) Login(ctx context.Context, email string, password string) model.User {
+func (s *ServiceImpl) Login(ctx context.Context, email string, password string) (model.User, string) {
 	var user model.User
 	err := s.DB.WithContext(ctx).Where("email = ?", email).First(&user).Error
 	if err != nil {
@@ -41,7 +44,9 @@ func (s *ServiceImpl) Login(ctx context.Context, email string, password string) 
 	if err != nil {
 		panic(errors.New("invalid email or password"))
 	}
-	return user
+	token, err := helper.GenerateToken(user.Id, user.Email, s.JWTSecret)
+	helper.PanicIfError(err)
+	return user, token
 }
 
 func (s *ServiceImpl) FindById(ctx context.Context, userId int) model.User {

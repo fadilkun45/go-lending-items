@@ -79,6 +79,7 @@ func toLoanResponses(loans []model.Loan) []LoanResponse {
 // @Param body body CreateLoanRequest true "Loan data"
 // @Success 201 {object} helper.WebResponse
 // @Failure 400 {object} helper.WebResponse
+// @Security BearerAuth
 // @Router /api/loans [post]
 func (h *ControllerImpl) Create(w http.ResponseWriter, r *http.Request) {
 	defer helper.RecoverError(w)
@@ -100,8 +101,9 @@ func (h *ControllerImpl) Create(w http.ResponseWriter, r *http.Request) {
 // @Tags loans
 // @Produce json
 // @Param id path int true "Loan ID"
-// @Success 200 {object} model.Loan
+// @Success 200 {object} LoanResponse
 // @Failure 404 {object} helper.WebResponse
+// @Security BearerAuth
 // @Router /api/loans/{id} [get]
 func (h *ControllerImpl) FindById(w http.ResponseWriter, r *http.Request) {
 	defer helper.RecoverError(w)
@@ -120,6 +122,7 @@ func (h *ControllerImpl) FindById(w http.ResponseWriter, r *http.Request) {
 // @Param page query int false "Page number" default(1)
 // @Param page_size query int false "Page size" default(10)
 // @Success 200 {object} helper.PaginatedWebResponse
+// @Security BearerAuth
 // @Router /api/loans [get]
 func (h *ControllerImpl) FindAll(w http.ResponseWriter, r *http.Request) {
 	defer helper.RecoverError(w)
@@ -143,6 +146,7 @@ func (h *ControllerImpl) FindAll(w http.ResponseWriter, r *http.Request) {
 // @Param page query int false "Page number" default(1)
 // @Param page_size query int false "Page size" default(10)
 // @Success 200 {object} helper.PaginatedWebResponse
+// @Security BearerAuth
 // @Router /api/loans/borrower/{borrower_id} [get]
 func (h *ControllerImpl) FindByBorrowerID(w http.ResponseWriter, r *http.Request) {
 	defer helper.RecoverError(w)
@@ -172,6 +176,7 @@ func (h *ControllerImpl) FindByBorrowerID(w http.ResponseWriter, r *http.Request
 // @Param body body UpdateLoanRequest false "Returned at (optional, defaults to now)"
 // @Success 200 {object} helper.WebResponse
 // @Failure 404 {object} helper.WebResponse
+// @Security BearerAuth
 // @Router /api/loans/{id} [put]
 func (h *ControllerImpl) Update(w http.ResponseWriter, r *http.Request) {
 	defer helper.RecoverError(w)
@@ -201,6 +206,7 @@ func (h *ControllerImpl) Update(w http.ResponseWriter, r *http.Request) {
 // @Param id path int true "Loan ID"
 // @Success 200 {object} helper.WebResponse
 // @Failure 404 {object} helper.WebResponse
+// @Security BearerAuth
 // @Router /api/loans/{id} [delete]
 func (h *ControllerImpl) Delete(w http.ResponseWriter, r *http.Request) {
 	defer helper.RecoverError(w)
