@@ -21,7 +21,7 @@ var publicPaths = map[string]bool{
 func Auth(secret string) func(http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			if publicPaths[r.URL.Path] || strings.HasPrefix(r.URL.Path, "/swagger/") {
+			if publicPaths[r.URL.Path] {
 				next.ServeHTTP(w, r)
 				return
 			}
