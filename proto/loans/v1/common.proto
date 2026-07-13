@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+package loans.v1;
+
+// PageRequest mirrors the REST query params ?page=&page_size=
+// (defaults applied server-side: page=1, page_size=10).
+message PageRequest {
+  int32 page = 1;
+  int32 page_size = 2;
+}

@@ -1,0 +1,90 @@
+syntax = "proto3";
+
+package loans.v1;
+
+import "google/protobuf/timestamp.proto";
+import "loans/v1/common.proto";
+import "loans/v1/user.proto";
+
+service LoanService {
+  rpc CreateLoan(CreateLoanRequest) returns (CreateLoanResponse);
+  rpc GetLoan(GetLoanRequest) returns (GetLoanResponse);
+  rpc ListLoans(ListLoansRequest) returns (ListLoansResponse);
+  rpc ListLoansByBorrower(ListLoansByBorrowerRequest) returns (ListLoansByBorrowerResponse);
+  // UpdateLoan returns a borrowed item (mirrors PUT /api/loans/{id});
+  // returned_at defaults to now when unset.
+  rpc UpdateLoan(UpdateLoanRequest) returns (UpdateLoanResponse);
+  rpc DeleteLoan(DeleteLoanRequest) returns (DeleteLoanResponse);
+}
+
+message ItemSummary {
+  int64 id = 1;
+  string name = 2;
+}
+
+message Loan {
+  int64 id = 1;
+  ItemSummary item = 2;
+  User borrower = 3;
+  google.protobuf.Timestamp borrowed_at = 4;
+  // Unset while the item is still borrowed.
+  google.protobuf.Timestamp returned_at = 5;
+  string status = 6;
+}
+
+message CreateLoanRequest {
+  int64 item_id = 1;
+  int64 borrower_id = 2;
+}
+
+message CreateLoanResponse {
+  Loan loan = 1;
+}
+
+message GetLoanRequest {
+  int64 id = 1;
+}
+
+message GetLoanResponse {
+  Loan loan = 1;
+}
+
+message ListLoansRequest {
+  PageRequest page = 1;
+}
+
+message ListLoansResponse {
+  repeated Loan loans = 1;
+  int32 page = 2;
+  int32 page_size = 3;
+  int64 total = 4;
+}
+
+message ListLoansByBorrowerRequest {
+  int64 borrower_id = 1;
+  PageRequest page = 2;
+}
+
+message ListLoansByBorrowerResponse {
+  repeated Loan loans = 1;
+  int32 page = 2;
+  int32 page_size = 3;
+  int64 total = 4;
+}
+
+message UpdateLoanRequest {
+  int64 id = 1;
+  google.protobuf.Timestamp returned_at = 2;
+}
+
+message UpdateLoanResponse {
+  Loan loan = 1;
+}
+
+message DeleteLoanRequest {
+  int64 id = 1;
+}
+
+message DeleteLoanResponse {
+  string message = 1;
+}

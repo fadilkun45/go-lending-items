@@ -6,3 +6,7 @@ migrate:
 
 swag:
 	swag init
+
+proto:
+	buf lint
+	buf generate

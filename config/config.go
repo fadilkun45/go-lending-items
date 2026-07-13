@@ -9,6 +9,7 @@ type Config struct {
 	DB_PORT     string `mapstructure:"DB_PORT"`
 	DB_NAME     string `mapstructure:"DB_NAME"`
 	APP_PORT    string `mapstructure:"APP_PORT"`
+	GRPC_PORT   string `mapstructure:"GRPC_PORT"`
 	JWT_SECRET  string `mapstructure:"JWT_SECRET"`
 }
 

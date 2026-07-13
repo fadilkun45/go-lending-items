@@ -12,6 +12,7 @@ package main
 import (
 	"fmt"
 	_ "loans-item-go/docs"
+	"net"
 
 	"loans-item-go/config"
 	categoryctrl "loans-item-go/controller/category"
@@ -29,6 +30,7 @@ import (
 	itemsvc "loans-item-go/service/item"
 	loansvc "loans-item-go/service/loan"
 	usersvc "loans-item-go/service/user"
+	"loans-item-go/transport/grpcserver"
 	"net/http"
 
 	httpSwagger "github.com/swaggo/http-swagger"
@@ -94,6 +96,15 @@ func main() {
 	mux.HandleFunc("DELETE /api/loans/{id}", loanCtrl.Delete)
 
 	handler := middleware.CORS(middleware.Auth(cfg.JWT_SECRET)(mux))
+
+	// gRPC server berbagi instance service yang sama dengan REST
+	grpcServer := grpcserver.New(cfg.JWT_SECRET, userSvc, loanSvc)
+	go func() {
+		lis, err := net.Listen("tcp", "localhost:"+cfg.GRPC_PORT)
+		helper.PanicIfError(err)
+		fmt.Println("gRPC server started on port", cfg.GRPC_PORT)
+		helper.PanicIfError(grpcServer.Serve(lis))
+	}()
 
 	server := &http.Server{
 		Addr:    "localhost:" + cfg.APP_PORT,
