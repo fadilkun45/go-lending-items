@@ -794,6 +794,28 @@ paths:
       summary: Login user
       tags:
       - users
+  /api/users/me:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.User'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/helper.WebResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/helper.WebResponse'
+      security:
+      - BearerAuth: []
+      summary: Get current user from JWT
+      tags:
+      - users
   /api/users/register:
     post:
       consumes:

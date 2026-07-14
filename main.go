@@ -66,6 +66,7 @@ func main() {
 	mux.HandleFunc("POST /api/users/register", userCtrl.Register)
 	mux.HandleFunc("POST /api/users/login", userCtrl.Login)
 	mux.HandleFunc("GET /api/users", userCtrl.FindAll)
+	mux.HandleFunc("GET /api/users/me", userCtrl.Me)
 	mux.HandleFunc("GET /api/users/{id}", userCtrl.FindById)
 	mux.HandleFunc("PUT /api/users/{id}", userCtrl.Update)
 	mux.HandleFunc("DELETE /api/users/{id}", userCtrl.Delete)

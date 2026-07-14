@@ -2,6 +2,7 @@ package userctrl
 
 import (
 	"loans-item-go/helper"
+	"loans-item-go/middleware"
 	"loans-item-go/model"
 	"loans-item-go/service/user"
 	"net/http"
@@ -102,6 +103,25 @@ func (h *ControllerImpl) FindById(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	helper.WriteResponse(w, http.StatusOK, h.UserService.FindById(r.Context(), id))
+}
+
+// @Summary Get current user from JWT
+// @Tags users
+// @Produce json
+// @Success 200 {object} model.User
+// @Failure 401 {object} helper.WebResponse
+// @Failure 404 {object} helper.WebResponse
+// @Security BearerAuth
+// @Router /api/users/me [get]
+func (h *ControllerImpl) Me(w http.ResponseWriter, r *http.Request) {
+	defer helper.RecoverError(w)
+
+	userID, ok := r.Context().Value(middleware.UserIDKey).(int64)
+	if !ok || userID == 0 {
+		helper.WriteError(w, http.StatusUnauthorized, "unauthorized")
+		return
+	}
+	helper.WriteResponse(w, http.StatusOK, h.UserService.FindById(r.Context(), int(userID)))
 }
 
 // @Summary Get all users
