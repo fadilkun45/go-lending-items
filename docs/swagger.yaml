@@ -349,6 +349,40 @@ paths:
       summary: Update category
       tags:
       - categories
+  /api/categories/search:
+    get:
+      parameters:
+      - description: Search keyword
+        in: query
+        name: q
+        required: true
+        type: string
+      - default: 1
+        description: Page number
+        in: query
+        name: page
+        type: integer
+      - default: 10
+        description: Page size
+        in: query
+        name: page_size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/helper.PaginatedWebResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/helper.WebResponse'
+      security:
+      - BearerAuth: []
+      summary: Search categories by name
+      tags:
+      - categories
   /api/items:
     get:
       parameters:
@@ -506,6 +540,43 @@ paths:
       security:
       - BearerAuth: []
       summary: Get items by owner
+      tags:
+      - items
+  /api/items/search:
+    get:
+      parameters:
+      - description: Search keyword (name or serial number)
+        in: query
+        name: search
+        type: string
+      - description: Filter by category ID
+        in: query
+        name: category_id
+        type: integer
+      - default: 1
+        description: Page number
+        in: query
+        name: page
+        type: integer
+      - default: 10
+        description: Page size
+        in: query
+        name: page_size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/helper.PaginatedWebResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/helper.WebResponse'
+      security:
+      - BearerAuth: []
+      summary: Search items by name/serial number and/or category
       tags:
       - items
   /api/loans:

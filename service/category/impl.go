@@ -39,3 +39,7 @@ func (s *ServiceImpl) FindById(ctx context.Context, categoryId int) model.Catego
 func (s *ServiceImpl) FindAll(ctx context.Context, page int, pageSize int) ([]model.Category, int64) {
 	return s.CategoryRepository.FindAll(ctx, s.DB, page, pageSize)
 }
+
+func (s *ServiceImpl) Search(ctx context.Context, query string, page int, pageSize int) ([]model.Category, int64) {
+	return s.CategoryRepository.Search(ctx, s.DB, query, page, pageSize)
+}

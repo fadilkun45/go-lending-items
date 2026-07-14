@@ -49,6 +49,27 @@ func (r *RepositoryImpl) FindAll(ctx context.Context, tx *gorm.DB, page int, pag
 	return items, total
 }
 
+func applySearchFilters(db *gorm.DB, query string, categoryId int) *gorm.DB {
+	if query != "" {
+		pattern := "%" + query + "%"
+		db = db.Where("items.name LIKE ? OR items.serial_no LIKE ?", pattern, pattern)
+	}
+	if categoryId > 0 {
+		db = db.Where("items.category_id = ?", categoryId)
+	}
+	return db
+}
+
+func (r *RepositoryImpl) Search(ctx context.Context, tx *gorm.DB, query string, categoryId int, page int, pageSize int) ([]model.Item, int64) {
+	var items []model.Item
+	var total int64
+	applySearchFilters(tx.WithContext(ctx).Model(&model.Item{}), query, categoryId).Count(&total)
+	offset := (page - 1) * pageSize
+	err := applySearchFilters(tx.WithContext(ctx).Joins("Category").Joins("Owner"), query, categoryId).Limit(pageSize).Offset(offset).Find(&items).Error
+	helper.HandleDBError(err, "")
+	return items, total
+}
+
 func (r *RepositoryImpl) FindByOwner(ctx context.Context, tx *gorm.DB, ownerId int, page int, pageSize int) ([]model.Item, int64) {
 	var items []model.Item
 	var total int64

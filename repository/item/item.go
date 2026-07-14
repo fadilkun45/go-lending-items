@@ -14,4 +14,5 @@ type Repository interface {
 	FindById(ctx context.Context, tx *gorm.DB, itemId int) model.Item
 	FindAll(ctx context.Context, tx *gorm.DB, page int, pageSize int) ([]model.Item, int64)
 	FindByOwner(ctx context.Context, tx *gorm.DB, ownerId int, page int, pageSize int) ([]model.Item, int64)
+	Search(ctx context.Context, tx *gorm.DB, query string, categoryId int, page int, pageSize int) ([]model.Item, int64)
 }

@@ -74,6 +74,7 @@ func main() {
 	// category routes
 	mux.HandleFunc("POST /api/categories", categoryCtrl.Create)
 	mux.HandleFunc("GET /api/categories", categoryCtrl.FindAll)
+	mux.HandleFunc("GET /api/categories/search", categoryCtrl.Search)
 	mux.HandleFunc("GET /api/categories/{id}", categoryCtrl.FindById)
 	mux.HandleFunc("PUT /api/categories/{id}", categoryCtrl.Update)
 	mux.HandleFunc("DELETE /api/categories/{id}", categoryCtrl.Delete)
@@ -81,7 +82,8 @@ func main() {
 	// item routes
 	mux.HandleFunc("POST /api/items", itemCtrl.Create)
 	mux.HandleFunc("GET /api/items", itemCtrl.FindAll)
-	mux.HandleFunc("GET /api/items/owner/{ownerId}", itemCtrl.FindByOwner)
+	mux.HandleFunc("GET /api/items/search", itemCtrl.Search)
+	mux.HandleFunc("GET /api/items/owner", itemCtrl.FindByOwner)
 	mux.HandleFunc("GET /api/items/{id}", itemCtrl.FindById)
 	mux.HandleFunc("PUT /api/items/{id}", itemCtrl.Update)
 	mux.HandleFunc("DELETE /api/items/{id}", itemCtrl.Delete)

@@ -43,3 +43,7 @@ func (s *ServiceImpl) FindAll(ctx context.Context, page int, pageSize int) ([]mo
 func (s *ServiceImpl) FindByOwner(ctx context.Context, ownerId int, page int, pageSize int) ([]model.Item, int64) {
 	return s.ItemRepository.FindByOwner(ctx, s.DB, ownerId, page, pageSize)
 }
+
+func (s *ServiceImpl) Search(ctx context.Context, query string, categoryId int, page int, pageSize int) ([]model.Item, int64) {
+	return s.ItemRepository.Search(ctx, s.DB, query, categoryId, page, pageSize)
+}

@@ -4,7 +4,7 @@ import (
 	"loans-item-go/helper"
 	"loans-item-go/middleware"
 	"loans-item-go/model"
-	"loans-item-go/service/user"
+	usersvc "loans-item-go/service/user"
 	"net/http"
 	"strconv"
 )

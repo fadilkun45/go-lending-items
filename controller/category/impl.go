@@ -92,6 +92,36 @@ func (h *ControllerImpl) FindAll(w http.ResponseWriter, r *http.Request) {
 	helper.WritePaginatedResponse(w, http.StatusOK, categories, page, pageSize, total)
 }
 
+// @Summary Search categories by name
+// @Tags categories
+// @Produce json
+// @Param q query string true "Search keyword"
+// @Param page query int false "Page number" default(1)
+// @Param page_size query int false "Page size" default(10)
+// @Success 200 {object} helper.PaginatedWebResponse
+// @Failure 400 {object} helper.WebResponse
+// @Security BearerAuth
+// @Router /api/categories/search [get]
+func (h *ControllerImpl) Search(w http.ResponseWriter, r *http.Request) {
+	defer helper.RecoverError(w)
+
+	query := r.URL.Query().Get("q")
+	if query == "" {
+		helper.WriteError(w, http.StatusBadRequest, "q is required")
+		return
+	}
+	page, _ := strconv.Atoi(r.URL.Query().Get("page"))
+	pageSize, _ := strconv.Atoi(r.URL.Query().Get("page_size"))
+	if page <= 0 {
+		page = 1
+	}
+	if pageSize <= 0 {
+		pageSize = 10
+	}
+	categories, total := h.CategoryService.Search(r.Context(), query, page, pageSize)
+	helper.WritePaginatedResponse(w, http.StatusOK, categories, page, pageSize, total)
+}
+
 // @Summary Update category
 // @Tags categories
 // @Accept json

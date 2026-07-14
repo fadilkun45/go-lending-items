@@ -11,4 +11,5 @@ type Service interface {
 	Delete(ctx context.Context, category model.Category) model.Category
 	FindById(ctx context.Context, categoryId int) model.Category
 	FindAll(ctx context.Context, page int, pageSize int) ([]model.Category, int64)
+	Search(ctx context.Context, query string, page int, pageSize int) ([]model.Category, int64)
 }

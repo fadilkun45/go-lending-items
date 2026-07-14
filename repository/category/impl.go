@@ -39,12 +39,23 @@ func (r *RepositoryImpl) FindById(ctx context.Context, tx *gorm.DB, categoryId i
 	return category
 }
 
+func (r *RepositoryImpl) Search(ctx context.Context, tx *gorm.DB, query string, page int, pageSize int) ([]model.Category, int64) {
+	var categories []model.Category
+	var total int64
+	pattern := "%" + query + "%"
+	tx.WithContext(ctx).Model(&model.Category{}).Where("name LIKE ?", pattern).Count(&total)
+	offset := (page - 1) * pageSize
+	err := tx.WithContext(ctx).Where("name LIKE ?", pattern).Limit(pageSize).Offset(offset).Find(&categories).Error
+	helper.HandleDBError(err, "")
+	return categories, total
+}
+
 func (r *RepositoryImpl) FindAll(ctx context.Context, tx *gorm.DB, page int, pageSize int) ([]model.Category, int64) {
 	var categories []model.Category
 	var total int64
 	tx.WithContext(ctx).Model(&model.Category{}).Count(&total)
 	offset := (page - 1) * pageSize
-	err := tx.WithContext(ctx).Limit(pageSize).Offset(offset).Find(&categories).Error
+	err := tx.WithContext(ctx).Joins("Owner").Limit(pageSize).Offset(offset).Find(&categories).Error
 	helper.HandleDBError(err, "")
 	return categories, total
 }

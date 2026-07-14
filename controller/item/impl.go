@@ -3,7 +3,7 @@ package itemctrl
 import (
 	"loans-item-go/helper"
 	"loans-item-go/model"
-	"loans-item-go/service/item"
+	itemsvc "loans-item-go/service/item"
 	"net/http"
 	"strconv"
 )
@@ -86,6 +86,38 @@ func (h *ControllerImpl) FindById(w http.ResponseWriter, r *http.Request) {
 	helper.WriteResponse(w, http.StatusOK, h.ItemService.FindById(r.Context(), id))
 }
 
+// @Summary Search items by name/serial number and/or category
+// @Tags items
+// @Produce json
+// @Param search query string false "Search keyword (name or serial number)"
+// @Param category_id query int false "Filter by category ID"
+// @Param page query int false "Page number" default(1)
+// @Param page_size query int false "Page size" default(10)
+// @Success 200 {object} helper.PaginatedWebResponse
+// @Failure 400 {object} helper.WebResponse
+// @Security BearerAuth
+// @Router /api/items/search [get]
+func (h *ControllerImpl) Search(w http.ResponseWriter, r *http.Request) {
+	defer helper.RecoverError(w)
+
+	query := r.URL.Query().Get("search")
+	categoryId, _ := strconv.Atoi(r.URL.Query().Get("category_id"))
+	if query == "" && categoryId <= 0 {
+		helper.WriteError(w, http.StatusBadRequest, "search or category_id is required")
+		return
+	}
+	page, _ := strconv.Atoi(r.URL.Query().Get("page"))
+	pageSize, _ := strconv.Atoi(r.URL.Query().Get("page_size"))
+	if page <= 0 {
+		page = 1
+	}
+	if pageSize <= 0 {
+		pageSize = 10
+	}
+	items, total := h.ItemService.Search(r.Context(), query, categoryId, page, pageSize)
+	helper.WritePaginatedResponse(w, http.StatusOK, items, page, pageSize, total)
+}
+
 // @Summary Get all items
 // @Tags items
 // @Produce json
@@ -112,16 +144,16 @@ func (h *ControllerImpl) FindAll(w http.ResponseWriter, r *http.Request) {
 // @Summary Get items by owner
 // @Tags items
 // @Produce json
-// @Param ownerId path int true "Owner ID"
+// @Param ownerId query int true "Owner ID"
 // @Param page query int false "Page number" default(1)
 // @Param page_size query int false "Page size" default(10)
 // @Success 200 {object} helper.PaginatedWebResponse
 // @Security BearerAuth
-// @Router /api/items/owner/{ownerId} [get]
+// @Router /api/items/owner/ [get]
 func (h *ControllerImpl) FindByOwner(w http.ResponseWriter, r *http.Request) {
 	defer helper.RecoverError(w)
 
-	ownerId, err := strconv.Atoi(r.PathValue("ownerId"))
+	ownerId, err := strconv.Atoi(r.URL.Query().Get("ownerId"))
 	if err != nil {
 		helper.WriteError(w, http.StatusBadRequest, "invalid ownerId")
 		return
